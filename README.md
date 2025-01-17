@@ -37,8 +37,6 @@ Para ejecutar el proyecto localmente, asegúrate de tener instalados:
 
 ## Estrucutra del proyecto
 ```bash
-## Estructura del proyecto
-```bash
 src
 └── main
     ├── java
