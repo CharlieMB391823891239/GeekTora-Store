@@ -30,11 +30,36 @@ El desarrollo de GeekTora Store sigue la metodología Scrum, estructurándose en
 
 ## Requisitos Previos
 Para ejecutar el proyecto localmente, asegúrate de tener instalados:
-- **Java**: Versión 21.
-- **Node.js**: Versión 22.
+- **Java**: Versión 21.0.4
+- **Node.js**: Versión 22.11.0
 - **Angular CLI**: Versión 19.
 - **AWS**: Deploy.
 
+## Estrucutra del proyecto
+```bash
+## Estructura del proyecto
+```bash
+src
+└── main
+    ├── java
+    │   └── com.geektora.geektora_api
+    │       ├── config/        
+    │       ├── controller/        
+    │       ├── dto/            
+    │       ├── entity/
+    │       ├── repository/
+    │       ├── service/
+    │       ├── service/impl/
+    │       ├── util/
+    │       ├── exception/
+    │       ├── security/
+    │       └── mapper/
+    └── resources
+        ├── templates/
+        ├── static/
+        ├── application.properties
+        └── schema.sql
+   ```
 ## Instalación
 1. Clona este repositorio:
    ```bash
@@ -43,7 +68,7 @@ Para ejecutar el proyecto localmente, asegúrate de tener instalados:
 
 2. Configura el backend:
    ```bash
-   cd backend
+   cd geektora-api
    ```
 
 3. Configura el frontend:
@@ -61,3 +86,6 @@ Los detalles del despliegue en AWS se encuentran en la documentación adicional 
 ---
 
 Este proyecto es mantenido y desarrollado por el equipo de GeekTora. Las contribuciones son bienvenidas mediante pull requests.
+
+## Licencia
+Este proyecto está licenciado bajo la Licencia MIT.
