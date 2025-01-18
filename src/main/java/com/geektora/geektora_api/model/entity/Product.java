@@ -23,10 +23,10 @@ public class Product {
     @Column(name = "price",nullable = false)
     private Double price;
 
-    @Column(name = "stock",nullable = true)
+    @Column(name = "stock")
     private Integer stock;
 
-    @Column(name = "image",nullable = true)
+    @Column(name = "image")
     private String image;
 
     @Column(name = "createdAt",nullable = false)

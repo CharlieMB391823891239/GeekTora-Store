@@ -12,9 +12,6 @@ public class ProfilePhoto {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Integer idProfilePhoto;
 
-    @Column(name = "idUser",nullable = false)
-    private Integer idUser;
-
     @Column(name = "image",nullable = false)
     private String image;
 }

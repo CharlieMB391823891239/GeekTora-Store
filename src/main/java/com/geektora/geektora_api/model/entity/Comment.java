@@ -18,7 +18,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "idProduct",nullable = false)
-    private Product idProduct;
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "idClient",nullable = false)
@@ -30,7 +30,7 @@ public class Comment {
     @Column(name = "updatedAt")
     private LocalDateTime updatedAt;
 
-    @Column(name = "image",nullable = true)
+    @Column(name = "image")
     private String image;
 
     @Column(name = "counter")
