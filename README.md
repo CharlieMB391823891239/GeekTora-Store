@@ -20,9 +20,11 @@ GeekTora Store es un proyecto de desarrollo de una página web para la visualiza
 ## Diagramas
 
 ### Diagrama de Base de Datos
+![BD - INSANO JUGUETES drawio](https://github.com/user-attachments/assets/217028b2-8c9a-4059-8e31-8ce8fb95a587)
 
 
 ### Diagrama de Clases
+![DIAGRAMA DE CLASES drawio](https://github.com/user-attachments/assets/c4a6033e-1265-4c16-876d-187eaf977c3d)
 
 
 ## Características Principales
