@@ -17,6 +17,14 @@ GeekTora Store es un proyecto de desarrollo de una página web para la visualiza
   - **EC2**: Servidor de aplicación.
   - **S3**: Almacenamiento de activos estáticos.
 
+## Diagramas
+
+### Diagrama de Base de Datos
+
+
+### Diagrama de Clases
+
+
 ## Características Principales
 - **Catálogo de Productos**: Permite a los usuarios explorar una amplia variedad de figuras de colección y productos relacionados con anime.
 - **Búsqueda y Filtrado**: Los usuarios pueden buscar productos por franquicia, tipo de figura, precio y otras características.
