@@ -22,17 +22,17 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "idClient",nullable = false)
-    private Client idClient;
+    private Client client;
 
     @Column(name = "createdAt",nullable = false)
-    private LocalDateTime createdAt;
+    private final LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updatedAt")
     private LocalDateTime updatedAt;
 
-    @Column(name = "image")
+    @Column(name = "image", nullable = false)
     private String image;
 
-    @Column(name = "counter")
-    private Integer Counter;
+    @Column(name = "counter", nullable = false)
+    private Integer counter;
 }
