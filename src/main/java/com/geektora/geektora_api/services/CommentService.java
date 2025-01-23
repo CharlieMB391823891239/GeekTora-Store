@@ -6,6 +6,7 @@ import com.geektora.geektora_api.exceptions.ResourceNotExistsException;
 import com.geektora.geektora_api.mappers.CommentMapper;
 import com.geektora.geektora_api.model.entity.Comment;
 import com.geektora.geektora_api.repository.article.CommentRepository;
+import com.geektora.geektora_api.repository.article.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class CommentService {
 
     @Autowired private CommentRepository commentRepository;
     @Autowired private CommentMapper commentMapper;
+    @Autowired private ProductRepository productRepository;
 
     public CommentDTO updateComment(UpdateCommentDTO updateCommentDTO, Integer idComment) {
         Comment comment = commentRepository.findById(idComment).orElseThrow(() -> new ResourceNotExistsException("No se encontró el comentario"));
@@ -28,5 +30,9 @@ public class CommentService {
 
     public void deleteComment(Integer idComment) {
         commentRepository.deleteById(idComment);
+    }
+
+    public void getCommentByProduct(Integer idProduct) {
+        productRepository.findById(idProduct).orElseThrow(() -> new ResourceNotExistsException("No se encontró el producto"));
     }
 }
