@@ -17,4 +17,9 @@ public class User {
     private Integer idUser;
 
     private String name;
+
+    private String email;
+
+    private String contrasena;
+
 }
