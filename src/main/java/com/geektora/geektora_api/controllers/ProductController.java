@@ -1,5 +1,6 @@
 package com.geektora.geektora_api.controllers;
 
+import com.geektora.geektora_api.DTO.product.ProductCreateDTO;
 import com.geektora.geektora_api.model.entity.Product;
 import com.geektora.geektora_api.repository.article.ProductRepository;
 import com.geektora.geektora_api.services.ProductService;
@@ -19,7 +20,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/create")
-    public Product createProduct(@RequestBody Product product) {
-        return productService.createProduct(product);
+    public Product createProduct(@RequestBody ProductCreateDTO productDTO) {
+        return productService.createProduct(productDTO);
     }
 }

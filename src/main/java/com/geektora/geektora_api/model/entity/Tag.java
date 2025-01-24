@@ -1,5 +1,6 @@
 package com.geektora.geektora_api.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,6 +23,7 @@ public class Tag {
     @Column(name = "active")
     private Boolean active;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
     private List<Product>products;
 }
