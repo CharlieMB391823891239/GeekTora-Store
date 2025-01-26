@@ -10,11 +10,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Service
 public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
 
     @Override
     public String login(LoginRequest loginRequest) {
@@ -36,6 +41,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String register(RegisterRequest registerRequest) {
+        // Validar que el correo tenga un formato válido
+        if (!isEmailValid(registerRequest.getEmail())) {
+            return "El formato del correo es inválido";
+        }
+
         // Validar que el correo y el nombre de usuario sean únicos
         if (userRepository.findByName(registerRequest.getName()).isPresent()) {
             return "El nombre de usuario ya está en uso";
@@ -52,5 +62,12 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(newUser);
         return "Registro exitoso";
+    }
+
+    // Método para validar el formato del correo electrónico
+    private boolean isEmailValid(String email) {
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }
