@@ -1,25 +1,33 @@
 package com.geektora.geektora_api.controllers;
 
+import com.geektora.geektora_api.DTO.product.ProductCreateDTO;
 import com.geektora.geektora_api.model.entity.Product;
-import com.geektora.geektora_api.repository.article.ProductRepository;
 import com.geektora.geektora_api.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("product")
 public class ProductController {
 
     @Autowired
-    private ProductRepository productRepository;
-    @Autowired
     private ProductService productService;
 
+    // Recibe un formulario multipart con datos del producto y las imágenes
     @PostMapping("/create")
-    public Product createProduct(@RequestBody Product product) {
-        return productService.createProduct(product);
+    public Product createProduct(@RequestParam("name") String name,
+                                 @RequestParam("description") String description,
+                                 @RequestParam("price") Double price,
+                                 @RequestParam("stock") Integer stock,
+                                 @RequestParam("tagIds") List<Integer> tagIds,
+                                 @RequestParam("images") List<MultipartFile> images) {
+        // Crear DTO con los datos
+        ProductCreateDTO productDTO = new ProductCreateDTO(name, description, price, stock, tagIds, images);
+
+        // Llamar al servicio para crear el producto
+        return productService.createProduct(productDTO);
     }
 }

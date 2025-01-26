@@ -26,9 +26,6 @@ public class Product {
     @Column(name = "stock")
     private Integer stock;
 
-    @Column(name = "image")
-    private String image;
-
     @Column(name = "createdAt",nullable = false)
     private LocalDateTime createdAt;
 
@@ -45,6 +42,9 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "idTag")
     )
     private List<Tag> tags;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images;
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<Comment> comments;
