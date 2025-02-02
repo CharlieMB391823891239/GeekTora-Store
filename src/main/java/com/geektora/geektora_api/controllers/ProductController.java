@@ -23,9 +23,10 @@ public class ProductController {
                                             @RequestParam("price") Double price,
                                             @RequestParam("stock") Integer stock,
                                             @RequestParam("tagIds") List<Integer> tagIds,
+                                            @RequestParam("categoryIds") List<Integer> categoryIds,
                                             @RequestParam("images") List<MultipartFile> images) {
         // Crear DTO con los datos
-        ProductCreateDTO productDTO = new ProductCreateDTO(name, description, price, stock, tagIds, images);
+        ProductCreateDTO productDTO = new ProductCreateDTO(name, description, price, stock, tagIds, categoryIds, images);
 
         // Llamar al servicio para crear el producto y obtener el DTO de respuesta
         return productService.createProduct(productDTO);

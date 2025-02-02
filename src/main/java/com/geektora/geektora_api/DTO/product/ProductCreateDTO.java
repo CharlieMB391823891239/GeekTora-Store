@@ -13,6 +13,7 @@ public class ProductCreateDTO {
     private String description;
     private Double price;
     private Integer stock;
-    private List<Integer> tagIds; // Lista de IDs de tags
-    private List<MultipartFile> images; // Archivos de imágenes
+    private List<Integer> tagIds;
+    private List<Integer> categoryIds;
+    private List<MultipartFile> images;
 }

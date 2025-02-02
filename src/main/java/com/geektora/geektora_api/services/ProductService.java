@@ -5,9 +5,11 @@ import com.geektora.geektora_api.DTO.product.ProductCreateDTO;
 import com.geektora.geektora_api.DTO.product.ProductResponseDTO;
 import com.geektora.geektora_api.exceptions.ResourceNotExistsException;
 import com.geektora.geektora_api.mappers.ProductMapper;
+import com.geektora.geektora_api.model.entity.Category;
 import com.geektora.geektora_api.model.entity.Image;
 import com.geektora.geektora_api.model.entity.Product;
 import com.geektora.geektora_api.model.entity.Tag;
+import com.geektora.geektora_api.repository.article.CategoryRepository;
 import com.geektora.geektora_api.repository.article.ImageRepository;
 import com.geektora.geektora_api.repository.article.ProductRepository;
 import com.geektora.geektora_api.repository.article.TagRepository;
@@ -22,6 +24,7 @@ public class ProductService {
 
     @Autowired private ProductRepository productRepository;
     @Autowired private TagRepository tagRepository;
+    @Autowired private CategoryRepository categoryRepository;
     @Autowired private ProductMapper productMapper;
     @Autowired private ImgurService imgurService;
     @Autowired private ImageRepository imageRepository;
@@ -37,6 +40,14 @@ public class ProductService {
                             .orElseThrow(() -> new ResourceNotExistsException("Tag not found with id: " + tagId)))
                     .collect(Collectors.toList());
             product.setTags(tags);
+        }
+
+        if (productDTO.getCategoryIds() != null) {
+            List<Category> categories = productDTO.getCategoryIds().stream()
+                    .map(categoryId -> categoryRepository.findById(categoryId)
+                            .orElseThrow(() -> new ResourceNotExistsException("Category not found with id: " + categoryId)))
+                    .collect(Collectors.toList());
+            product.setCategories(categories);
         }
 
         // Guardar el producto inicialmente en la base de datos
@@ -78,7 +89,9 @@ public class ProductService {
         responseDTO.setDescription(savedProduct.getDescription());
         responseDTO.setPrice(savedProduct.getPrice());
         responseDTO.setStock(savedProduct.getStock());
+        responseDTO.setCreatedAt(savedProduct.getCreatedAt());
         responseDTO.setTagIds(savedProduct.getTags().stream().map(Tag::getIdTag).collect(Collectors.toList()));
+        responseDTO.setCategoryIds(savedProduct.getCategories().stream().map(Category::getIdCategory).collect(Collectors.toList()));
         responseDTO.setImages(imageResponseDTOs);
 
         // Retornar el DTO

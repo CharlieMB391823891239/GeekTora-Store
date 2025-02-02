@@ -20,7 +20,7 @@ public class Product {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "description", nullable = false, length = 120)
+    @Column(name = "description", nullable = false)
     private String description;
 
     @Column(name = "price", nullable = false)
@@ -46,6 +46,14 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "idTag")
     )
     private List<Tag> tags;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "product_category",
+            joinColumns = @JoinColumn(name = "idProduct"),
+            inverseJoinColumns = @JoinColumn(name = "idCategory")
+    )
+    private List<Category> categories;
 
     @JsonManagedReference // Controla la serialización para evitar el bucle
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
