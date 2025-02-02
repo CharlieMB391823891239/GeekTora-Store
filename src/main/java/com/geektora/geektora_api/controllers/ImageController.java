@@ -19,7 +19,6 @@ public class ImageController {
     @PostMapping("/upload")
     public ResponseEntity<List<String>> uploadImages(@RequestParam("files") List<MultipartFile> files) {
         try {
-            // Delegamos la lógica de subir las imágenes a un metodo en el servicio
             List<String> imageUrls = imgurService.uploadImages(files);
             return ResponseEntity.ok(imageUrls);
         } catch (Exception e) {

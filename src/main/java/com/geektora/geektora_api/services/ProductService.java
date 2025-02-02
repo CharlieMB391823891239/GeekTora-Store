@@ -1,6 +1,8 @@
 package com.geektora.geektora_api.services;
 
+import com.geektora.geektora_api.DTO.image.ImageResponseDTO;
 import com.geektora.geektora_api.DTO.product.ProductCreateDTO;
+import com.geektora.geektora_api.DTO.product.ProductResponseDTO;
 import com.geektora.geektora_api.exceptions.ResourceNotExistsException;
 import com.geektora.geektora_api.mappers.ProductMapper;
 import com.geektora.geektora_api.model.entity.Image;
@@ -24,7 +26,7 @@ public class ProductService {
     @Autowired private ImgurService imgurService;
     @Autowired private ImageRepository imageRepository;
 
-    public Product createProduct(ProductCreateDTO productDTO) {
+    public ProductResponseDTO createProduct(ProductCreateDTO productDTO) {
         // Convertir el DTO en entidad Product
         Product product = productMapper.toEntity(productDTO);
 
@@ -41,12 +43,10 @@ public class ProductService {
         Product savedProduct = productRepository.save(product);
 
         // Verificar si se han proporcionado imágenes
+        List<ImageResponseDTO> imageResponseDTOs = null;
         if (productDTO.getImages() != null && !productDTO.getImages().isEmpty()) {
             // Subir las imágenes a Imgur y obtener las URLs
             List<String> imageUrls = imgurService.uploadImages(productDTO.getImages());
-
-            // Imprimir las URLs de las imágenes en la consola para verificación
-            imageUrls.forEach(url -> System.out.println("Image URL: " + url)); // Usando System.out.println() para imprimir las URLs
 
             // Crear y asociar las URLs de las imágenes al producto
             List<Image> images = imageUrls.stream()
@@ -61,11 +61,27 @@ public class ProductService {
             // Guardar las imágenes en la base de datos
             imageRepository.saveAll(images);  // Guardar todas las imágenes en la base de datos
 
-            // Asociar las imágenes al producto después de que haya sido guardado
-            savedProduct.setImages(images);
+            // Mapear las imágenes a ImageResponseDTO
+            imageResponseDTOs = images.stream()
+                    .map(image -> {
+                        ImageResponseDTO imageResponseDTO = new ImageResponseDTO();
+                        imageResponseDTO.setImageId(image.getIdImage());
+                        imageResponseDTO.setUrl(image.getUrl());
+                        return imageResponseDTO;
+                    })
+                    .collect(Collectors.toList());
         }
 
-        // Retornar el producto con las imágenes asociadas (si las hubo)
-        return savedProduct;
+        // Crear el DTO de respuesta
+        ProductResponseDTO responseDTO = new ProductResponseDTO();
+        responseDTO.setName(savedProduct.getName());
+        responseDTO.setDescription(savedProduct.getDescription());
+        responseDTO.setPrice(savedProduct.getPrice());
+        responseDTO.setStock(savedProduct.getStock());
+        responseDTO.setTagIds(savedProduct.getTags().stream().map(Tag::getIdTag).collect(Collectors.toList()));
+        responseDTO.setImages(imageResponseDTOs);
+
+        // Retornar el DTO
+        return responseDTO;
     }
 }

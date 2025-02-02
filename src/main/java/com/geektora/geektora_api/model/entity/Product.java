@@ -1,32 +1,35 @@
 package com.geektora.geektora_api.model.entity;
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "product")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idProduct")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idProduct;
 
-    @Column(name = "name",nullable = false, length = 100)
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "description",nullable = false, length = 120)
+    @Column(name = "description", nullable = false, length = 120)
     private String description;
 
-    @Column(name = "price",nullable = false)
+    @Column(name = "price", nullable = false)
     private Double price;
 
     @Column(name = "stock")
     private Integer stock;
 
-    @Column(name = "createdAt",nullable = false)
+    @Column(name = "createdAt", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updatedAt")
@@ -35,6 +38,7 @@ public class Product {
     @Column(name = "active")
     private Boolean active;
 
+    @JsonIgnoreProperties("products") // Evita la serialización inversa
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "product_tag",
@@ -43,9 +47,7 @@ public class Product {
     )
     private List<Tag> tags;
 
+    @JsonManagedReference // Controla la serialización para evitar el bucle
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images;
-
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
-    private List<Comment> comments;
 }

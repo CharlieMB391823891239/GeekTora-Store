@@ -1,8 +1,9 @@
 package com.geektora.geektora_api.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-
 
 @Data
 @Entity
@@ -12,10 +13,11 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idImage;
 
-    @Column(name = "url",nullable = false)
+    @Column(name = "url", nullable = false)
     private String url;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idProduct", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "idProduct")
+    @JsonIgnore
     private Product product;
 }
