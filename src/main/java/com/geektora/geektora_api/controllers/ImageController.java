@@ -44,4 +44,35 @@ public class ImageController {
         List<Image> images = imgurService.getImagebyIdProduct(id);
         return ResponseEntity.ok(images);
     }
+
+    @DeleteMapping("/deleteImgProduct/{id}")
+    public ResponseEntity<String> deleteImage(@PathVariable int id) {
+        try{
+        Image image = imgurService.deleteImagebyId(id);
+        return ResponseEntity.ok("Delete successfully image deleted: "+ image.getIdImage());
+    } catch (RuntimeException e) {
+        return ResponseEntity.status(500).body("Error: " + e.getMessage());
+    }
+    }
+
+    @DeleteMapping("/deleteImagesProduct")
+    public ResponseEntity<String> deleteImages(@RequestBody List<Integer> ids) {
+        StringBuilder response = new StringBuilder();
+
+        for (Integer id : ids) {
+            try {
+                // Llamar al servicio para eliminar la imagen
+                Image image = imgurService.deleteImagebyId(id);
+                response.append("Successfully deleted image with ID: ").append(image.getIdImage()).append("\n");
+            } catch (RuntimeException e) {
+                // Si hay un error (por ejemplo, imagen no encontrada o activa), lo agregamos al response
+                response.append("Error deleting image with ID: ").append(id).append(" - ").append(e.getMessage()).append("\n");
+            }
+        }
+
+        if (response.toString().contains("Error")) {
+            return ResponseEntity.status(500).body(response.toString());
+        }
+        return ResponseEntity.ok(response.toString());
+    }
 }

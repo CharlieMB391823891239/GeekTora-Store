@@ -15,10 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -93,5 +90,36 @@ public class ImgurService {
 
     public List<Image> getImagebyIdProduct(int id) {
         return imageRepository.findByProduct_IdProduct(id);
+    }
+
+    public Image deleteImagebyId(int id) {
+        Image image = imageRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Image not found with ID: " + id));
+
+        if(image.isActive()){
+            throw new RuntimeException("You can't delete an active image");
+        }
+
+        // Eliminar la imagen y retornarla
+        deleteImageFromImgur(image.getDeleteHash());
+        
+        imageRepository.delete(image);
+        return image;
+    }
+
+    private void deleteImageFromImgur(String deleteHash) {
+        if (deleteHash == null || deleteHash.isEmpty()) {
+            throw new RuntimeException("Invalid delete hash.");
+        }
+
+        WebClient webClient = WebClient.create("https://api.imgur.com");
+
+        webClient.delete()
+                .uri("/3/image/{deleteHash}", deleteHash)  // Asegúrate de que deleteHash esté correcto
+                .header("Authorization", "Bearer " + bearerToken)
+                .retrieve()
+                .bodyToMono(String.class)
+                .doOnTerminate(() -> System.out.println("Delete request to Imgur completed"))
+                .block();  // Usamos block() para esperar la respuesta de la solicitud sin usar async
     }
 }
