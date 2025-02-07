@@ -86,8 +86,12 @@ public class ImgurService {
         }
     }
 
-    public List<Image> getImagesFromImgur() {
+    public List<Image> getImages() {
 
         return imageRepository.findAll();
+    }
+
+    public List<Image> getImagebyIdProduct(int id) {
+        return imageRepository.findByProduct_IdProduct(id);
     }
 }

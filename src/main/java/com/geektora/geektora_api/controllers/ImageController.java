@@ -30,12 +30,18 @@ public class ImageController {
     @GetMapping("/list")
     public ResponseEntity<List<Image>> getImagesFromImgur() {
         try {
-            List<Image> images = imgurService.getImagesFromImgur();
+            List<Image> images = imgurService.getImages();
             return ResponseEntity.ok(images);  // Retornamos la lista de imágenes en el cuerpo de la respuesta
         } catch (Exception e) {
             // Imprime el error para poder rastrear el problema y devuelve un error 500
             System.err.println("Error obteniendo imágenes: " + e.getMessage());
             return ResponseEntity.status(500).body(null); // Cambié el 404 a 500 ya que es un error del servidor
         }
+    }
+
+    @GetMapping("/product/{id}")
+    public ResponseEntity<List<Image>> getImagesByProduct(@PathVariable int id) {
+        List<Image> images = imgurService.getImagebyIdProduct(id);
+        return ResponseEntity.ok(images);
     }
 }
