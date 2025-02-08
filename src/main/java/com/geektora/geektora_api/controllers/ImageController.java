@@ -75,4 +75,10 @@ public class ImageController {
         }
         return ResponseEntity.ok(response.toString());
     }
+
+    @PatchMapping("updateState/{id}")
+    public ResponseEntity<Image> updateStateImage(@PathVariable int id) {
+        Image images = imgurService.updateState(id);
+        return ResponseEntity.ok(images);
+    }
 }

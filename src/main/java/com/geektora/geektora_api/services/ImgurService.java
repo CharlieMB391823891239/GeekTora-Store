@@ -122,4 +122,13 @@ public class ImgurService {
                 .doOnTerminate(() -> System.out.println("Delete request to Imgur completed"))
                 .block();  // Usamos block() para esperar la respuesta de la solicitud sin usar async
     }
+
+    public Image updateState(int id) {
+
+        Image image = imageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Image not found with ID: " + id));
+        image.setActive(!image.isActive());
+        imageRepository.save(image);
+        return image;
+    }
 }
