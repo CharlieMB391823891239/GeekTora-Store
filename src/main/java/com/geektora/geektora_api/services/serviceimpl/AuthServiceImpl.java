@@ -5,13 +5,18 @@ import com.geektora.geektora_api.DTO.request.RegisterRequest;
 import com.geektora.geektora_api.model.entity.User;
 import com.geektora.geektora_api.repository.users.UserRepository;
 import com.geektora.geektora_api.services.AuthService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Optional;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -20,6 +25,7 @@ public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
 
     private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+    private static final String API_KEY = "d8bb7f04397b68a1e98a2e3f9dd80295";
 
     @Override
     public String login(LoginRequest loginRequest) {
@@ -41,12 +47,17 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String register(RegisterRequest registerRequest) {
-        // Validar que el correo tenga un formato válido
-        if (!isEmailValid(registerRequest.getEmail())) {
+        // Validar formato del correo
+        if (!isEmailValidFormat(registerRequest.getEmail())) {
             return "El formato del correo es inválido";
         }
 
-        // Validar que el correo y el nombre de usuario sean únicos
+        // Validar si el correo existe realmente
+        if (!isEmailReal(registerRequest.getEmail())) {
+            return "El correo ingresado no existe";
+        }
+
+        // Validar unicidad
         if (userRepository.findByName(registerRequest.getName()).isPresent()) {
             return "El nombre de usuario ya está en uso";
         }
@@ -54,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
             return "El correo ya está en uso";
         }
 
-        // Crear el usuario
+        // Registrar usuario
         User newUser = new User();
         newUser.setName(registerRequest.getName());
         newUser.setEmail(registerRequest.getEmail());
@@ -64,10 +75,29 @@ public class AuthServiceImpl implements AuthService {
         return "Registro exitoso";
     }
 
-    // Método para validar el formato del correo electrónico
-    private boolean isEmailValid(String email) {
+    // Validar formato del correo
+    private boolean isEmailValidFormat(String email) {
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    // Validar si el correo realmente existe con MailboxLayer
+    private boolean isEmailReal(String email) {
+        try {
+            String apiUrl = "http://apilayer.net/api/check?access_key=" + API_KEY + "&email=" + email;
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String response = reader.readLine();
+            reader.close();
+
+            JSONObject jsonResponse = new JSONObject(response);
+            return jsonResponse.getBoolean("smtp_check"); // Si es true, el correo existe
+        } catch (Exception e) {
+            return false; // En caso de error, asumimos que el correo no es válido
+        }
     }
 }

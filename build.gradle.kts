@@ -24,6 +24,7 @@ repositories {
 }
 
 dependencies {
+	implementation("org.json:json:20220320")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	//implementation("org.springframework.boot:spring-boot-starter-security")
